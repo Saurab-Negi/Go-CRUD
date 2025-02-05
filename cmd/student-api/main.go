@@ -11,6 +11,7 @@ import (
 	"time"
 
 	"github.com/Saurab-Negi/Go-CRUD/internal/config"
+	student "github.com/Saurab-Negi/Go-CRUD/internal/http/handlers/students"
 )
 
 func main() {
@@ -20,9 +21,7 @@ func main() {
 	// Setup router
 	router := http.NewServeMux()
 
-	router.HandleFunc("GET /", func(w http.ResponseWriter, r *http.Request) {
-		w.Write([]byte("Welcome to students api"))
-	})
+	router.HandleFunc("POST /api/students", student.New())
 
 	// Setup server
 	server := http.Server{
