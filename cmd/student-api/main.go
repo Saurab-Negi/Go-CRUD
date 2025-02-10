@@ -12,11 +12,20 @@ import (
 
 	"github.com/Saurab-Negi/Go-CRUD/internal/config"
 	student "github.com/Saurab-Negi/Go-CRUD/internal/http/handlers/students"
+	"github.com/Saurab-Negi/Go-CRUD/internal/storage/sqlite"
 )
 
 func main() {
 	// Load config
 	cfg := config.MustLoad()
+
+	// Database setup
+	_, err := sqlite.New(cfg)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	slog.Info("storage initialized", slog.String("env", cfg.Env), slog.String("version","1.0.0"))
 
 	// Setup router
 	router := http.NewServeMux()
@@ -50,7 +59,7 @@ func main() {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
-	err := server.Shutdown(ctx)
+	err = server.Shutdown(ctx)
 	if err != nil {
 		slog.Error("Fails to shutdown the server", slog.String("error", err.Error()))
 	}
